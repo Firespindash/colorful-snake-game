@@ -1,0 +1,39 @@
+{
+  "name": "electron-version",
+  "version": "1.0.0",
+  "description": "\"Desktop version of colorful snake game!\"",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "\"echo Hello!\"",
+    "dist:linux": "electron-builder --linux AppImage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Firespindash/colorful-snake-game.git"
+  },
+  "keywords": [
+    "[]"
+  ],
+  "author": "Firespindash",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Firespindash/colorful-snake-game/issues"
+  },
+  "homepage": "https://github.com/Firespindash/colorful-snake-game#readme",
+  "devDependencies": {
+    "electron": "^4.1.1",
+    "electron-builder": "^20.39.0",
+    "electron-forge": "^5.2.4",
+    "electron-packager": "^13.1.1"
+  },
+  "build": {
+    "appId": "com.firespindash.app",
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "category": "Game"
+    }
+  }
+}

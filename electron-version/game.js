@@ -170,7 +170,7 @@ function start(){
         clearInterval(interval);
         break;
       case 13: // Disrupt
-        interval = window.setInterval(game, 100);
+         interval = window.setInterval(game, 100);
         break;
       case 82: // Reset
         window.location.reload(true);
