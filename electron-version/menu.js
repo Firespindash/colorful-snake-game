@@ -1,4 +1,5 @@
 var menu = document.getElementById('menu');
+var startKey = 0;
 
 function menus(){
   var p = document.createElement('p');
@@ -12,5 +13,14 @@ function menus(){
     start();
     menu.removeChild(p);
     menu.removeChild(small);
+  })
+
+  document.addEventListener("keypress", function(event){
+    if (event.keyCode === 32 && startKey == 0){ // Start Key
+      start();
+      menu.removeChild(p);
+      menu.removeChild(small);
+      startKey = 1;
+    }
   })
 }

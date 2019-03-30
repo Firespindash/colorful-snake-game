@@ -20,6 +20,7 @@ function start(){
   var color1 = "red";
   var color2 = "yellow";
   var color3 = "blue"; // Apple color
+  var disrupt = 1;
 
   var trail = [];
   tail = 5;
@@ -167,10 +168,14 @@ function start(){
         velY = velocity;
         break;
       case 80: // Pause
+        disrupt = 0;
         clearInterval(interval);
         break;
       case 13: // Disrupt
-        interval = window.setInterval(game, 100);
+        if (disrupt == 0){
+          interval = window.setInterval(game, 100);
+          disrupt = 1;
+        }
         break;
       case 82: // Reset
         window.location.reload(true);
