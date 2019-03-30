@@ -1,5 +1,5 @@
 var menu = document.getElementById('menu');
-var startKey = 1;
+var startKey = 0;
 
 function menus(){
   var p = document.createElement('p');
