@@ -1,26 +1,29 @@
-var menu = document.getElementById('menu');
+const menu = document.getElementById('menu');
 var startKey = 0;
 
-function menus(){
-  var p = document.createElement('p');
+const remove = () => {
+  document.body.removeChild(menu);
+}
+
+const menus = () => {
+  let p = document.createElement('p');
   p.innerHTML = "Start the Game";
+  p.setAttribute('id', 'snake-game-start');
   menu.appendChild(p);
-  var small = document.createElement('small');
+  let small = document.createElement('small');
   small.innerHTML = "Click to play";
   menu.appendChild(small);
 
-  menu.addEventListener('click', function(){
+  menu.addEventListener('click', () => {
     start();
-    menu.removeChild(p);
-    menu.removeChild(small);
-  })
+    remove();
+  });
 
-  document.addEventListener("keypress", function(event){
-    if (event.keyCode === 32 && startKey == 0){ // Start Key
+  document.addEventListener("keypress", event => {
+    if (event.keyCode === 32 && startKey == 0) { // Start Key
       start();
-      menu.removeChild(p);
-      menu.removeChild(small);
+      remove();
       startKey = 1;
     }
-  })
+  });
 }

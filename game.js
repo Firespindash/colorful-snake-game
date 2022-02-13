@@ -1,11 +1,13 @@
-function start(){
+const start = () => {
 
-  var stage = document.getElementById('stage');
-  var context = stage.getContext("2d");
+  const message = document.getElementById('message');
+  const extra = document.getElementById('extra');
+  const stage = document.getElementById('stage');
+  const context = stage.getContext("2d");
   document.addEventListener("keydown", keyPush);
 
-  var interval = window.setInterval(game, 100);
-  setInterval(color, 1000);
+  var interval = window.setInterval(() => { game(); }, 100);
+  setInterval(() => { color(); }, 1000);
 
   const velocity = 1;
 
@@ -13,8 +15,8 @@ function start(){
   var velY = 0;
   var pointX = 10;
   var pointY = 15;
-  var pisize = 20; //pi == pieces
-  var pieces = 20;
+  const pisize = 20; //pi == pieces
+  const pieces = 20;
   var appleX = 15;
   var appleY = 15;
   var color1 = "red";
@@ -22,66 +24,34 @@ function start(){
   var color3 = "blue"; // Apple color
   var disrupt = 1;
 
-  var trail = [];
+  const trail = [];
   tail = 5;
 
-  function color(){
-    if (Math.floor(Math.random()*3) == 0){ // Blue
-      r = 44;
-      g = 44;
-      b = 220;
-      color1 = 'rgb(' + r + ',' + g + ',' + b + ')';
-    }
-    if (Math.floor(Math.random()*3) == 1){ // Red
-      r = 197;
-      g = 20;
-      b = 22;
-      color1 = 'rgb(' + r + ',' + g + ',' + b + ')';
-    }
-    if (Math.floor(Math.random()*3) == 2){ // Yellow
-      r = 229;
-      g = 232;
-      b = 106;
-      color1 = 'rgb(' + r + ',' + g + ',' + b + ')';
-    }
-
-    if (Math.floor(Math.random()*6 + 3) == 3){ // Purple
-      r2 = 101;
-      g2 = 34;
-      b2 = 171;
-      color2 = 'rgb(' + r2 + ',' + g2 + ',' + b2 + ')';
-    }
-    if (Math.floor(Math.random()*6 + 3) == 4){ // Green
-      r2 = 90;
-      g2 = 230;
-      b2 = 85;
-      color2 = 'rgb(' + r2 + ',' + g2 + ',' + b2 + ')';
-    }
-    if (Math.floor(Math.random()*6 + 3) == 5){ // Orange
-      r2 = 235;
-      g2 = 168;
-      b2 = 51;
-      color2 = 'rgb(' + r2 + ',' + g2 + ',' + b2 + ')';
-    }
+  const pause = () => {
+    disrupt = 0;
+    clearInterval(interval);
   }
 
-  function game(){
+  const color = () => {
+    if (Math.floor(Math.random()*3) == 0) color1 = 'rgb(44, 44, 220)'; // Blue
+    else if (Math.floor(Math.random()*3) == 1) color1 = 'rgb(197, 20, 22)'; // Red
+    else if (Math.floor(Math.random()*3) == 2) color1 = 'rgb(229, 232, 106)'; // Yellow
+
+    if (Math.floor(Math.random()*6 + 3) == 3) color2 = 'rgb(101, 34, 171)'; // Purple
+    else if (Math.floor(Math.random()*6 + 3) == 4) color2 = 'rgb(90, 230, 85)'; // Green
+    else if (Math.floor(Math.random()*6 + 3) == 5) color2 = 'rgb(235, 168, 51)'; // Orange
+  }
+
+  const game = () => {
 
     pointX += velX;
     pointY += velY;
 
-    if (pointX < 0){
-      pointX = pieces - 1;
-    }
-    if (pointX > pieces - 1){
-      pointX = 0;
-    }
-    if (pointY < 0){
-      pointY = pieces - 1;
-    }
-    if (pointY > pieces - 1){
-      pointY = 0;
-    }
+    if (pointX < 0) pointX = pieces - 1;
+    else if (pointX > pieces - 1) pointX = 0;
+
+    if (pointY < 0) pointY = pieces - 1;
+    else if (pointY > pieces - 1) pointY = 0;
 
     context.fillStyle = "black";
     context.fillRect(0, 0, stage.width, stage.height);
@@ -89,66 +59,58 @@ function start(){
     context.fillStyle = color3;
     context.fillRect(appleX * pisize, appleY * pisize, pisize, pisize);
 
-    for (var j = 0; j < trail.length; j++){
-      var gradient = context.createLinearGradient(0, 370, 0, 0);
+    trail.forEach(item => {
+      const gradient = context.createLinearGradient(0, 370, 0, 0);
       gradient.addColorStop(0, color1);
       gradient.addColorStop(1, color2);
       context.fillStyle = gradient;
-    };
+    });
 
-    for (var i = 0; i < trail.length; i++){
-      context.fillRect(trail[i].x * pisize,
-      trail[i].y * pisize,
-      pisize - 1, pisize - 1);
-      if (trail[i].x == pointX && trail[i].y == pointY){
-        pointX = 10;
-        pointY = 15;
-        velX = 0;
-        velY = 0;
-        tail = 5;
+    trail.forEach(item => {
+      context.fillRect(item.x * pisize, item.y * pisize, pisize - 1, pisize - 1);
+      if (item.x == pointX && item.y == pointY) {
+        if (trail.length >= 399) {
+          pause();
+          message.innerHTML = "You win!";
+          extra.innerHTML = "Now you can see the complete gradient!";
+        }
+        else {
+          pointX = 10;
+          pointY = 15;
+          velX = 0;
+          velY = 0;
+          tail = 5;
+        }
       }
-    }
+      // And below here comes a new fix to the problem of
+      // an apple appearing inside the tail
+      if (item.x == appleX && item.y == appleY) eat();
+    });
 
     trail.push({ x: pointX, y: pointY })
-    while (trail.length > tail){
+    while (trail.length > tail) {
       trail.shift();
     }
 
-    if (appleX == pointX && appleY == pointY){
+    eat = () => {
       tail++;
       appleX = Math.floor(Math.random() * pieces);
       appleY = Math.floor(Math.random() * pieces);
-      if (Math.floor(Math.random()*9) == 0){
-        color3 = "blue";
-      }
-      if (Math.floor(Math.random()*9) == 1){
-        color3 = "red";
-      }
-      if (Math.floor(Math.random()*9) == 2){
-        color3 = "yellow";
-      }
-      if (Math.floor(Math.random()*9) == 3){
-        color3 = "green";
-      }
-      if (Math.floor(Math.random()*9) == 4){
-        color3 = "purple";
-      }
-      if (Math.floor(Math.random()*9) == 5){
-        color3 = "cyan";
-      }
-      if (Math.floor(Math.random()*9) == 6){
-        color3 = "aquamarine";
-      }
-      if (Math.floor(Math.random()*9) == 7){
-        color3 = "ghostwhite";
-      }
-      if (Math.floor(Math.random()*9) == 8){
-        color3 = "gray";
-      }
+      if (Math.floor(Math.random()*9) == 0) color3 = "blue";
+      else if (Math.floor(Math.random()*9) == 1) color3 = "red";
+      else if (Math.floor(Math.random()*9) == 2) color3 = "yellow";
+      else if (Math.floor(Math.random()*9) == 3) color3 = "green";
+      else if (Math.floor(Math.random()*9) == 4) color3 = "purple";
+      else if (Math.floor(Math.random()*9) == 5) color3 = "cyan";
+      else if (Math.floor(Math.random()*9) == 6) color3 = "aquamarine";
+      else if (Math.floor(Math.random()*9) == 7) color3 = "ghostwhite";
+      else if (Math.floor(Math.random()*9) == 8) color3 = "gray";
     }
+
+    if (appleX == pointX && appleY == pointY) eat();
   }
 
-  function keyPush(event){
+  function keyPush(event) {
 
     switch (event.keyCode) {
       case 37: // Left key
@@ -168,17 +130,20 @@ function start(){
         velY = velocity;
         break;
       case 80: // Pause
-        disrupt = 0;
-        clearInterval(interval);
+        pause();
+        message.innerHTML = "Paused";
         break;
       case 13: // Disrupt
-        if (disrupt == 0){
+        if (disrupt == 0) {
           interval = window.setInterval(game, 100);
           disrupt = 1;
+          message.innerHTML = "";
         }
         break;
       case 82: // Reset
-        window.location.reload(true);
+        message.innerHTML = "Reload"
+        pause();
+        setTimeout(() => { window.location.reload(true); }, 1000);
         break;
     }
   }
