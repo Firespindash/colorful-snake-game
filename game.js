@@ -14,7 +14,7 @@ const start = () => {
   var velX = 0; //vel == velocity
   var velY = 0;
   var pointX = 10;
-  var pointY = 15;
+  var pointY = 15;  
   const pisize = 20; //pi == pieces
   const pieces = 20;
   var appleX = 15;
@@ -25,7 +25,7 @@ const start = () => {
   var disrupt = 1;
 
   const trail = [];
-  tail = 5;
+  var tail = 5;
 
   const pause = () => {
     disrupt = 0;
@@ -130,18 +130,18 @@ const start = () => {
         velY = velocity;
         break;
       case 80: // Pause
-        pause();
-        message.innerHTML = "Paused";
-        break;
-      case 13: // Disrupt
         if (disrupt == 0) {
           interval = window.setInterval(game, 100);
           disrupt = 1;
           message.innerHTML = "";
         }
+        else {
+          pause();
+          message.innerHTML = "Paused";	
+        }
         break;
       case 82: // Reset
-        message.innerHTML = "Reload"
+        message.innerHTML = "Reload/Exit"
         pause();
         setTimeout(() => { window.location.reload(true); }, 1000);
         break;

@@ -5,7 +5,7 @@ const remove = () => {
   document.body.removeChild(menu);
 }
 
-const menus = () => {
+const createMenu = () => {
   let p = document.createElement('p');
   p.innerHTML = "Start the Game";
   p.setAttribute('id', 'snake-game-start');
@@ -17,13 +17,5 @@ const menus = () => {
   menu.addEventListener('click', () => {
     start();
     remove();
-  });
-
-  document.addEventListener("keypress", event => {
-    if (event.keyCode === 32 && startKey == 0) { // Start Key
-      start();
-      remove();
-      startKey = 1;
-    }
   });
 }
